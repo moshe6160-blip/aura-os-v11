@@ -1,3 +1,46 @@
-<!doctype html><html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/><meta name="theme-color" content="#080808"/><title>AURA Life</title>  <script type="module" crossorigin src="/assets/index-ChnACpF3.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-Cbj59V5A.css">
-</head><body><div id="root"></div></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#080808"/>
+  <title>AURA V11 Real Connect</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="brand">AURA OS</div>
+        <div class="sub">Real Connector Mode</div>
+      </div>
+      <button class="profile">M</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="orb">SOFIA</div>
+        <h1>Sofia needs real data.</h1>
+        <p id="status">Connect Google to start reading Gmail and Calendar signals.</p>
+        <button id="connectBtn">Connect Google</button>
+        <button class="ghost" id="refreshBtn">Load Real Briefing</button>
+      </section>
+
+      <section class="panel">
+        <h2>Real Briefing</h2>
+        <div id="briefing">
+          <p>No real data loaded yet.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Required Netlify Environment Variables</h2>
+        <code>GOOGLE_CLIENT_ID</code>
+        <code>GOOGLE_CLIENT_SECRET</code>
+        <code>GOOGLE_REDIRECT_URI</code>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
