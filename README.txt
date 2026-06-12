@@ -1,19 +1,16 @@
-# AURA V11 Google Real Connector
+AURA OS V11 - GitHub Ready
 
-Upload this ZIP to Netlify.
+Upload ALL files in this ZIP to your GitHub repository root.
 
-Then set Environment Variables in Netlify:
-- GOOGLE_CLIENT_ID
-- GOOGLE_CLIENT_SECRET
-- GOOGLE_REDIRECT_URI
+Netlify build settings:
+Build command: npm run build
+Publish directory: dist
+Functions directory: netlify/functions
 
-GOOGLE_REDIRECT_URI must be:
-https://YOUR-NETLIFY-SITE.netlify.app/.netlify/functions/google-callback
+Environment variables:
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI
 
-In Google Cloud Console:
-1. Create OAuth Client ID - Web Application
-2. Add the same redirect URI
-3. Enable Gmail API, Google Calendar API, People API
-4. Publish OAuth consent screen or add your email as test user
-
-This is a prototype. For production, store refresh tokens encrypted in Supabase, not cookies.
+Redirect URI:
+https://nda-68435e.netlify.app/.netlify/functions/google-callback
