@@ -1,17 +1,25 @@
-AURA OS V31 EDIT CHAT ACTIONS
+AURA OS V32 REAL SOFIA CHAT
 
-Added:
-- Sofia Ask bar
-- Simple Sofia Q&A over Gmail/Calendar briefing
-- Open Actions
-- Open Email modal
-- Open Event modal
-- Notification Center action links
-- Long press orbit icon to enter Edit Mode
-- Drag orbit icons and save to Local Storage
-- Remove orbit icons with ×
-- Reset orbit layout in System
-- WhatsApp launcher deep link
+What changed:
+- Sofia is now a conversation layer, not only a fixed briefing.
+- You can ask naturally:
+  "סופיה מה הפגישה הבאה?"
+  "סופיה מה שלומך?"
+  "מה השעה?"
+  "מה מזג האוויר?"
+  "מה חשוב היום?"
+- Browser voice input added where supported.
+- Weather works with browser location permission through Open-Meteo.
+- Gmail/Calendar context is pulled inside the Sofia chat function.
+- Optional real AI:
+  Add OPENAI_API_KEY in Netlify Environment Variables for full free conversation.
+  Without OPENAI_API_KEY Sofia still answers Gmail/Calendar/time/weather/basic conversation.
 
-Upload all files to GitHub root and deploy.
-Keep Netlify environment variables unchanged.
+Keep existing Google env vars:
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI
+
+Optional:
+OPENAI_API_KEY
+OPENAI_MODEL = gpt-4o-mini

@@ -192,3 +192,78 @@ $("closeModal").addEventListener("click",()=>$("detailModal").classList.remove("
 $("clearActionsBtn").addEventListener("click",()=>$("actionCenter").innerHTML='<div class="muted">Cleared.</div>');
 $("openWhatsapp").addEventListener("click",()=>{location.href="https://wa.me/";});
 renderOrbit(); status();
+
+
+/* AURA V32 REAL SOFIA CHAT OVERRIDES */
+async function getGeoForSofia() {
+  return new Promise(resolve => {
+    if (!navigator.geolocation) return resolve({});
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+      () => resolve({}),
+      { enableHighAccuracy: false, timeout: 2500, maximumAge: 600000 }
+    );
+  });
+}
+
+async function askSofiaServer(message) {
+  const geo = await getGeoForSofia();
+  const res = await fetch("/.netlify/functions/sofia-chat", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, ...geo })
+  });
+  return await res.json();
+}
+
+async function ask() {
+  const q = $("askInput").value.trim();
+  if (!q) return;
+
+  $("askInput").value = "";
+  $("mainText").textContent = "Sofia is thinking…";
+  $("sofiaFeed").insertAdjacentHTML("afterbegin", feedItem("🧑‍💼", q, "You asked Sofia", null));
+
+  try {
+    const data = await askSofiaServer(q);
+    const answer = data.reply || "אני כאן, משה.";
+    $("mainText").textContent = answer;
+    $("sofiaFeed").insertAdjacentHTML("afterbegin", feedItem("✨", "Sofia", answer, null));
+    speak(answer);
+  } catch (e) {
+    const answer = "יש בעיה זמנית בחיבור לשיחה של Sofia.";
+    $("mainText").textContent = answer;
+    $("sofiaFeed").insertAdjacentHTML("afterbegin", feedItem("⚠️", "Sofia", answer, null));
+  }
+}
+
+function startVoiceInput() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    speak("המכשיר הזה לא תומך עדיין בהכתבה קולית בדפדפן. אפשר להקליד לי בשדה למטה.");
+    return;
+  }
+  const rec = new SpeechRecognition();
+  rec.lang = "he-IL";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  $("voiceBar").classList.add("active");
+  rec.onresult = e => {
+    const text = e.results[0][0].transcript;
+    $("askInput").value = text;
+    ask();
+  };
+  rec.onend = () => $("voiceBar").classList.remove("active");
+  rec.start();
+}
+
+setTimeout(() => {
+  const input = $("askInput");
+  if (input) input.placeholder = "סופיה…";
+  const voice = $("voiceBtn");
+  if (voice) voice.onclick = startVoiceInput;
+  const send = $("askSend");
+  if (send) send.onclick = ask;
+  if (input) input.onkeydown = e => { if (e.key === "Enter") ask(); };
+}, 0);
