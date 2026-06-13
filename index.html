@@ -4,12 +4,13 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="theme-color" content="#080808"/>
-<title>AURA OS V13</title>
+<title>AURA OS V14</title>
 <style>
 :root{--bg:#080808;--gold:#c8a56a;--muted:#aaa;--line:rgba(255,255,255,.12)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:radial-gradient(circle at 50% 8%,rgba(200,165,106,.16),transparent 34%),var(--bg);color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
-.app{max-width:520px;margin:0 auto;min-height:100vh;padding:34px 18px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.brand{color:var(--gold);font-weight:900;letter-spacing:4px}.sub{color:var(--muted);margin-top:8px}.profile{width:44px;height:44px;border-radius:50%;border:1px solid rgba(200,165,106,.4);background:rgba(255,255,255,.08);color:var(--gold);font-weight:900}.hero,.panel{border:1px solid var(--line);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.04));padding:24px;margin-bottom:16px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding:34px 18px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.brand{color:var(--gold);font-weight:900;letter-spacing:4px}.sub{color:var(--muted);margin-top:8px}.profile{width:44px;height:44px;border-radius:50%;border:1px solid rgba(200,165,106,.4);background:rgba(255,255,255,.08);color:var(--gold);font-weight:900}
+.hero,.panel{border:1px solid var(--line);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.04));padding:24px;margin-bottom:16px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
 .hero{text-align:center;min-height:54vh;display:flex;flex-direction:column;align-items:center;justify-content:center}.orb{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#efd08a,#9b7438);color:#111;font-weight:1000;letter-spacing:3px;margin-bottom:24px}
 h1{color:var(--gold);font-size:34px;line-height:1.05;margin:0 0 12px}h2{color:var(--gold);margin-top:0}p{color:var(--muted);line-height:1.45}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}button{border:0;border-radius:999px;background:var(--gold);color:#111;font-weight:900;padding:14px 18px;margin-top:8px}.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line)}
 .item{border-top:1px solid var(--line);padding:12px 0}.item b{display:block}.item small{color:var(--muted);word-break:break-word}.ok{color:#5cff9d}.bad{color:#ff5b5b}.warn{color:#ffd36e}
@@ -17,7 +18,7 @@ h1{color:var(--gold);font-size:34px;line-height:1.05;margin:0 0 12px}h2{color:va
 </head>
 <body>
 <div class="app">
-<header class="top"><div><div class="brand">AURA OS</div><div class="sub">Google Real Connector V13</div></div><button class="profile">M</button></header>
+<header class="top"><div><div class="brand">AURA OS</div><div class="sub">Google Real Connector V14</div></div><button class="profile">M</button></header>
 <section class="hero"><div class="orb">SOFIA</div><h1>Sofia needs real data.</h1><p id="status">Connect Google to start reading Gmail and Calendar signals.</p><div class="actions"><button id="connectBtn">Connect Google</button><button class="ghost" id="refreshBtn">Load Real Briefing</button><button class="ghost" id="testBtn">Test Functions</button></div></section>
 <section class="panel"><h2>Real Briefing</h2><div id="briefing"><p>No real data loaded yet.</p></div></section>
 <section class="panel"><h2>Connector Status</h2><div id="debug"><p>Tap Test Functions.</p></div></section>
@@ -25,7 +26,6 @@ h1{color:var(--gold);font-size:34px;line-height:1.05;margin:0 0 12px}h2{color:va
 <script>
 const statusEl=document.getElementById('status'), briefingEl=document.getElementById('briefing'), debugEl=document.getElementById('debug');
 document.getElementById('connectBtn').onclick=()=>{location.href='/.netlify/functions/google-auth'};
-
 document.getElementById('testBtn').onclick=async()=>{
   debugEl.innerHTML='<p>Testing...</p>';
   try{
@@ -36,12 +36,12 @@ document.getElementById('testBtn').onclick=async()=>{
       row('GOOGLE_CLIENT_ID', d.hasClientId?'Found':'Missing', d.hasClientId?'ok':'bad'),
       row('GOOGLE_CLIENT_SECRET', d.hasClientSecret?'Found':'Missing', d.hasClientSecret?'ok':'bad'),
       row('GOOGLE_REDIRECT_URI', d.redirectUri||'Missing', d.redirectUri?'ok':'bad'),
-      row('Cookie token', d.hasToken?'Found':'Missing / connect again', d.hasToken?'ok':'warn'),
+      row('Google connected cookie', d.googleConnected?'Connected':'Missing / connect again', d.googleConnected?'ok':'warn'),
+      row('Access token cookie', d.hasToken?'Found':'Not used in V14 fallback', d.hasToken?'ok':'warn'),
       row('Version', d.version||'unknown','')
     ].join('');
   }catch(e){debugEl.innerHTML='<p class="bad">Functions not working. Check deploy.</p>'}
 };
-
 document.getElementById('refreshBtn').onclick=async()=>{
   briefingEl.innerHTML='<p>Loading real Google signals...</p>';
   try{
@@ -49,20 +49,15 @@ document.getElementById('refreshBtn').onclick=async()=>{
     const d=await r.json();
     if(!r.ok){
       briefingEl.innerHTML='<p class="bad">'+esc(d.error||'Not connected yet')+'</p>'+(d.details?'<p>'+esc(d.details)+'</p>':'');
-      statusEl.textContent='Google connected but data access failed.';
       return;
     }
-    statusEl.textContent='Google connected. Sofia is reading real signals.';
-    let emails=d.emails||[], events=d.events||[], warnings=d.warnings||[];
+    statusEl.textContent='Google connected.';
     briefingEl.innerHTML =
-      row('Gmail', emails.length+' recent signals', emails.length?'ok':'warn') +
-      emails.map(e=>row(esc(e.subject||'No subject'), esc(e.from||''), '')).join('') +
-      row('Calendar', events.length+' upcoming signals', events.length?'ok':'warn') +
-      events.map(ev=>row(esc(ev.summary||'Untitled'), esc(ev.start||''), '')).join('') +
-      (warnings.length ? row('Warnings', warnings.map(esc).join(' | '), 'warn') : '');
-  }catch(e){
-    briefingEl.innerHTML='<p class="bad">Could not load data. Test Functions first.</p>';
-  }
+      row('Gmail', (d.gmailCount||0)+' recent signals', d.gmailCount?'ok':'warn') +
+      row('Calendar', (d.calendarCount||0)+' upcoming signals', d.calendarCount?'ok':'warn') +
+      (d.note ? row('Note', esc(d.note), 'warn') : '') +
+      (d.warnings&&d.warnings.length ? row('Warnings', d.warnings.map(esc).join(' | '), 'warn') : '');
+  }catch(e){briefingEl.innerHTML='<p class="bad">Could not load data. Test Functions first.</p>'}
 };
 function row(a,b,cls){return `<div class="item"><b>${a}</b><small class="${cls||''}">${b}</small></div>`}
 function esc(s){return String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}

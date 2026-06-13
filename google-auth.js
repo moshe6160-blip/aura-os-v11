@@ -1,6 +1,6 @@
 exports.handler=async function(){
-  const clientId=process.env.GOOGLE_CLIENT_ID;
-  const redirectUri=process.env.GOOGLE_REDIRECT_URI;
+  const clientId=(process.env.GOOGLE_CLIENT_ID||'').trim();
+  const redirectUri=(process.env.GOOGLE_REDIRECT_URI||'').trim();
   if(!clientId||!redirectUri){
     return {statusCode:500,body:'Missing GOOGLE_CLIENT_ID or GOOGLE_REDIRECT_URI'};
   }
@@ -12,8 +12,8 @@ exports.handler=async function(){
     'profile'
   ].join(' ');
   const url='https://accounts.google.com/o/oauth2/v2/auth?'+new URLSearchParams({
-    client_id:clientId.trim(),
-    redirect_uri:redirectUri.trim(),
+    client_id:clientId,
+    redirect_uri:redirectUri,
     response_type:'code',
     access_type:'offline',
     prompt:'consent',

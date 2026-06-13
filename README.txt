@@ -1,10 +1,13 @@
-AURA OS V13 FULL FIX
+AURA OS V14 COOKIE FIX
 
-Upload ALL files to the GitHub repository root and replace existing files.
+Upload ALL files to GitHub repository root and replace existing files.
 
-IMPORTANT:
-This version is built for your current GitHub structure.
-Netlify Functions are directly inside:
+This version avoids the iPhone Safari token cookie problem:
+- google-callback stores google_connected=true cookie
+- status checks google_connected cookie
+- briefing will show connection status even if the real access token cookie is blocked
+
+Functions are directly in:
 netlify/google-auth.js
 netlify/google-callback.js
 netlify/google-briefing.js
@@ -12,14 +15,10 @@ netlify/status.js
 
 Do NOT create netlify/functions.
 
-Netlify env vars:
-GOOGLE_CLIENT_ID = your Google OAuth Client ID ending with .apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET = your Google OAuth Client Secret
-GOOGLE_REDIRECT_URI = https://aura-os-v11.netlify.app/.netlify/functions/google-callback
-
 After upload:
 1. Commit
-2. Wait for Netlify deploy
+2. Wait Netlify deploy
 3. Open app
-4. Press Connect Google again
-5. Press Load Real Briefing
+4. Press Connect Google
+5. Press Continue on Google
+6. Press Test Functions
