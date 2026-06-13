@@ -1,9 +1,1 @@
-{
-  "name": "aura-os-v14-cookie-fix",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build": "node build.js"
-  },
-  "dependencies": {}
-}
+{"scripts":{"build":"node build.js"},"dependencies":{}}

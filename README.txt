@@ -1,16 +1,22 @@
-AURA OS V15 - google-briefing.js token fix
+AURA OS V16 FULL GOOGLE READY
 
-Upload this file to GitHub:
-netlify/google-briefing.js
+Upload ALL contents of this ZIP to the GitHub repository root.
 
-Replace the existing file completely.
+Keep Netlify environment variables:
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI = https://aura-os-v11.netlify.app/.netlify/functions/google-callback
+
+Required Google Cloud APIs:
+Gmail API = Enabled
+Google Calendar API = Enabled
 
 After upload:
-1. Commit changes
+1. Commit changes to main
 2. Wait for Netlify deploy
-3. Open Aura
-4. Press Load Real Briefing
+3. Open site
+4. Press Connect Google
+5. Press Test Functions
+6. Press Load Real Briefing
 
-This fixes:
-Missing access token
-by checking both event.headers.cookie and event.headers.Cookie.
+V16 includes full frontend UI + Google OAuth + status + real Gmail and Calendar item display.
