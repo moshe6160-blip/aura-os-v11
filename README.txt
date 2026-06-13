@@ -1,22 +1,19 @@
-AURA OS V16 FULL GOOGLE READY
+AURA OS V17 FIX
 
-Upload ALL contents of this ZIP to the GitHub repository root.
+Replace this file:
+netlify/google-briefing.js
 
-Keep Netlify environment variables:
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-GOOGLE_REDIRECT_URI = https://aura-os-v11.netlify.app/.netlify/functions/google-callback
-
-Required Google Cloud APIs:
-Gmail API = Enabled
-Google Calendar API = Enabled
+This fixes:
+1. Gmail subjects showing as (No subject)
+2. Gmail sender/snippet missing
+3. Calendar [object Object] dates
+4. Briefing now returns:
+   gmail: [{ subject, from, date, snippet }]
+   calendar: [{ summary, start, end, location }]
 
 After upload:
-1. Commit changes to main
-2. Wait for Netlify deploy
-3. Open site
-4. Press Connect Google
-5. Press Test Functions
-6. Press Load Real Briefing
-
-V16 includes full frontend UI + Google OAuth + status + real Gmail and Calendar item display.
+1. Commit changes
+2. Wait for Netlify Deploy
+3. Open Aura
+4. Press Connect Google again
+5. Press Load Real Briefing
