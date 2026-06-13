@@ -1,21 +1,17 @@
-AURA OS V25 LIVE SOFIA UI
+AURA OS V30 SOFIA OS
 
-Full updated system matching the requested visual:
-- More alive colors: blue, purple, green, orange, red
-- Sofia sun in the center
-- Real app icons around Sofia, not ugly text pills
-- Live Gmail / Calendar counters update after briefing
-- Sofia Briefing panel
-- Today Overview
-- Up Next
-- Priority Actions
-- Sofia Insights
-- Cleaner dock
-- System screen only shows connector status
+Built according to the recommendation:
+- Sofia is the home center
+- No noisy dashboard first
+- Sofia summary first
+- Smart Inbox groups: Urgent / Reply Needed / Billing / Information
+- Calendar timeline
+- Files Planet
+- Notification Center
+- Voice bar + speech synthesis
+- Small clean orbit icons around Sofia
+- Deep navy / electric blue / violet / gold colors
+- Google OAuth, Gmail and Calendar connector preserved
 
-Upload all files to GitHub repository root.
-Deploy on Netlify.
-Keep env vars:
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-GOOGLE_REDIRECT_URI
+Upload all files to GitHub root and deploy.
+Keep Netlify environment variables unchanged.

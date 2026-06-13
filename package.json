@@ -1,6 +1,6 @@
 {
-  "name": "aura-os-v25-live-sofia-ui",
-  "version": "25.0.0",
+  "name": "aura-os-v30-sofia-os",
+  "version": "30.0.0",
   "private": true,
   "scripts": {
     "build": "node build.js"

@@ -6,4 +6,4 @@ fs.mkdirSync(dist, { recursive: true });
 for (const file of ["index.html", "app.js", "style.css", "manifest.json"]) {
   fs.copyFileSync(path.join(__dirname, file), path.join(dist, file));
 }
-console.log("AURA OS V25 LIVE SOFIA UI build complete");
+console.log("AURA OS V30 SOFIA OS build complete");
