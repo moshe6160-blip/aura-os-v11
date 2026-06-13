@@ -11,7 +11,7 @@ exports.handler = async function(event) {
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
     body: JSON.stringify({
       ok: true,
-      version: "AURA_OS_V21_STATIC_NO_BUILD_FAIL",
+      version: "AURA_OS_V20_UNIVERSE_GOOGLE_MERGED",
       hasClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
       redirectUri: process.env.GOOGLE_REDIRECT_URI || null,

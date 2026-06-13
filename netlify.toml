@@ -1,6 +1,6 @@
 [build]
-  command = "echo AURA_STATIC_OK"
-  publish = "."
+  command = "npm run build"
+  publish = "dist"
   functions = "netlify/functions"
 
 [functions]
