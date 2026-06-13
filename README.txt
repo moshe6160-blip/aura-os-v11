@@ -1,27 +1,15 @@
-AURA OS V20 - Universe + Google Real Connector MERGED
+AURA OS V21 STATIC NO BUILD FAIL
 
-This package keeps the working V12/V20 Netlify structure:
-- netlify.toml uses functions = netlify/functions
-- functions are in netlify/functions/
+This package avoids Netlify build failures.
+Netlify build command:
+echo AURA_STATIC_OK
 
-Upload ALL contents of this ZIP to GitHub repository root and replace existing files.
+Publish directory:
+.
 
-After Netlify deploy, test:
-https://aura-os-v11.netlify.app/.netlify/functions/status
+Functions directory:
+netlify/functions
 
-It must show:
-"version":"AURA_OS_V20_UNIVERSE_GOOGLE_MERGED"
-
-Then:
-1. Open site
-2. Connect Google again
-3. Load Real Briefing
-
-Included:
-- Universe Home shell
-- Communication Planet with Gmail + Calendar real data
-- Facebook / Instagram / WhatsApp placeholders ready for next connectors
-- Revenue Planet placeholder
-- System Planet
-- POD Control Center
-- Working google-briefing.js with Gmail Subject / From / Date / Snippet
+Upload ALL contents to GitHub root and replace existing files.
+After deploy, status must show:
+AURA_OS_V21_STATIC_NO_BUILD_FAIL

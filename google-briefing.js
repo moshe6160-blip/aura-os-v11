@@ -88,7 +88,7 @@ exports.handler = async function(event) {
     statusCode: 200,
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
     body: JSON.stringify({
-      version: "AURA_OS_V20_UNIVERSE_GOOGLE_MERGED",
+      version: "AURA_OS_V21_STATIC_NO_BUILD_FAIL",
       gmailCount: emails.length,
       calendarCount: events.length,
       emails,

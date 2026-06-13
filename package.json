@@ -1,9 +1,9 @@
 {
-  "name": "aura-os-v20-universe-google-merged",
-  "version": "20.0.0",
+  "name": "aura-os-v21-static-no-build-fail",
+  "version": "21.0.0",
   "private": true,
   "scripts": {
-    "build": "node build.js"
+    "build": "echo AURA_STATIC_OK"
   },
   "dependencies": {}
 }
