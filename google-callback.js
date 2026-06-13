@@ -1,13 +1,10 @@
 exports.handler = async function (event) {
   const code = event.queryStringParameters && event.queryStringParameters.code;
-
-  if (!code) {
-    return { statusCode: 302, headers: { Location: "/?google=error-no-code" }, body: "" };
-  }
+  if (!code) return { statusCode: 302, headers: { Location: "/?google=error-no-code" }, body: "" };
 
   const res = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: { "Content-Type":"application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       code,
       client_id: process.env.GOOGLE_CLIENT_ID,
@@ -16,16 +13,9 @@ exports.handler = async function (event) {
       grant_type: "authorization_code"
     })
   });
-
   const data = await res.json();
 
-  if (!data.access_token) {
-    return {
-      statusCode: 302,
-      headers: { Location: "/?google=token-error" },
-      body: ""
-    };
-  }
+  if (!data.access_token) return { statusCode: 302, headers: { Location: "/?google=token-error" }, body: "" };
 
   return {
     statusCode: 302,

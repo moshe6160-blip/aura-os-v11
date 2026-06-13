@@ -5,9 +5,7 @@ function getCookie(header, name) {
 }
 
 async function googleGet(url, token) {
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   const data = await res.json().catch(() => ({}));
   return { ok: res.ok, status: res.status, data };
 }
@@ -19,17 +17,13 @@ function headerValue(headers, name) {
 
 async function getGmailDetails(token, messages) {
   const items = [];
-
   for (const msg of (messages || []).slice(0, 10)) {
     const detail = await googleGet(
       `https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`,
       token
     );
-
     if (!detail.ok) continue;
-
     const headers = detail.data.payload?.headers || [];
-
     items.push({
       id: detail.data.id,
       subject: headerValue(headers, "Subject") || "(No subject)",
@@ -38,7 +32,6 @@ async function getGmailDetails(token, messages) {
       snippet: detail.data.snippet || ""
     });
   }
-
   return items;
 }
 
@@ -49,7 +42,7 @@ exports.handler = async function (event) {
   if (!token) {
     return {
       statusCode: 401,
-      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      headers: { "Content-Type":"application/json", "Cache-Control":"no-store" },
       body: JSON.stringify({ error: "Missing access token. Connect Google again." })
     };
   }
@@ -60,30 +53,24 @@ exports.handler = async function (event) {
   );
 
   const now = new Date().toISOString();
-
   const calendarResult = await googleGet(
     "https://www.googleapis.com/calendar/v3/calendars/primary/events?singleEvents=true&orderBy=startTime&maxResults=10&timeMin=" + encodeURIComponent(now),
     token
   );
 
-  const gmailItems = gmailList.ok
-    ? await getGmailDetails(token, gmailList.data.messages || [])
-    : [];
-
-  const calendarItems = calendarResult.ok
-    ? (calendarResult.data.items || []).map(e => ({
-        id: e.id,
-        summary: e.summary || "(No title)",
-        start: e.start?.dateTime || e.start?.date || "",
-        end: e.end?.dateTime || e.end?.date || "",
-        location: e.location || "",
-        description: e.description || ""
-      }))
-    : [];
+  const gmailItems = gmailList.ok ? await getGmailDetails(token, gmailList.data.messages || []) : [];
+  const calendarItems = calendarResult.ok ? (calendarResult.data.items || []).map(e => ({
+    id: e.id,
+    summary: e.summary || "(No title)",
+    start: e.start?.dateTime || e.start?.date || "",
+    end: e.end?.dateTime || e.end?.date || "",
+    location: e.location || "",
+    description: e.description || ""
+  })) : [];
 
   return {
     statusCode: 200,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+    headers: { "Content-Type":"application/json", "Cache-Control":"no-store" },
     body: JSON.stringify({
       gmailCount: gmailItems.length,
       calendarCount: calendarItems.length,

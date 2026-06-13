@@ -6,13 +6,12 @@ function getCookie(header, name) {
 
 exports.handler = async function (event) {
   const cookieHeader = event.headers.cookie || event.headers.Cookie || "";
-
   return {
     statusCode: 200,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+    headers: { "Content-Type":"application/json", "Cache-Control":"no-store" },
     body: JSON.stringify({
       ok: true,
-      version: "AURA_OS_V18_FULL_FINAL_GOOGLE_BRIEFING",
+      version: "AURA_OS_V19_FULL_REPLACE_FINAL",
       hasClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
       redirectUri: process.env.GOOGLE_REDIRECT_URI || null,
