@@ -1,27 +1,33 @@
-AURA OS V20 - Universe + Google Real Connector MERGED
-
-This package keeps the working V12/V20 Netlify structure:
-- netlify.toml uses functions = netlify/functions
-- functions are in netlify/functions/
+AURA OS V23 FULL SYSTEM
 
 Upload ALL contents of this ZIP to GitHub repository root and replace existing files.
 
-After Netlify deploy, test:
-https://aura-os-v11.netlify.app/.netlify/functions/status
+This is not a small patch.
+It includes the full organized AURA OS:
+- Universe Home
+- Communication Planet
+- Social Planet placeholders: WhatsApp, Facebook, Instagram
+- Media Planet
+- Sofia Brain
+- System Planet
+- Working Google OAuth
+- Gmail real data with subject/from/date/snippet
+- Calendar real data
+- Sofia smart summary and recommended actions
+
+Important structure:
+netlify/functions/status.js
+netlify/functions/google-auth.js
+netlify/functions/google-callback.js
+netlify/functions/google-briefing.js
+
+Netlify env vars remain:
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI
+
+After deploy, check:
+/.netlify/functions/status
 
 It must show:
-"version":"AURA_OS_V20_UNIVERSE_GOOGLE_MERGED"
-
-Then:
-1. Open site
-2. Connect Google again
-3. Load Real Briefing
-
-Included:
-- Universe Home shell
-- Communication Planet with Gmail + Calendar real data
-- Facebook / Instagram / WhatsApp placeholders ready for next connectors
-- Revenue Planet placeholder
-- System Planet
-- POD Control Center
-- Working google-briefing.js with Gmail Subject / From / Date / Snippet
+AURA_OS_V23_FULL_SYSTEM

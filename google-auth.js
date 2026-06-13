@@ -1,10 +1,7 @@
 exports.handler = async function() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI;
-
-  if (!clientId || !redirectUri) {
-    return { statusCode: 500, body: "Missing GOOGLE_CLIENT_ID or GOOGLE_REDIRECT_URI" };
-  }
+  if (!clientId || !redirectUri) return { statusCode: 500, body: "Missing Google env variables" };
 
   const scope = [
     "openid",
@@ -18,9 +15,9 @@ exports.handler = async function() {
     client_id: clientId,
     redirect_uri: redirectUri,
     response_type: "code",
+    scope,
     access_type: "offline",
-    prompt: "consent",
-    scope
+    prompt: "consent"
   }).toString();
 
   return { statusCode: 302, headers: { Location: url }, body: "" };

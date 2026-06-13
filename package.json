@@ -1,6 +1,6 @@
 {
-  "name": "aura-os-v20-universe-google-merged",
-  "version": "20.0.0",
+  "name": "aura-os-v23-full-system",
+  "version": "23.0.0",
   "private": true,
   "scripts": {
     "build": "node build.js"
