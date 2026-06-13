@@ -1,24 +1,16 @@
-AURA OS V14 COOKIE FIX
+AURA OS V15 - google-briefing.js token fix
 
-Upload ALL files to GitHub repository root and replace existing files.
-
-This version avoids the iPhone Safari token cookie problem:
-- google-callback stores google_connected=true cookie
-- status checks google_connected cookie
-- briefing will show connection status even if the real access token cookie is blocked
-
-Functions are directly in:
-netlify/google-auth.js
-netlify/google-callback.js
+Upload this file to GitHub:
 netlify/google-briefing.js
-netlify/status.js
 
-Do NOT create netlify/functions.
+Replace the existing file completely.
 
 After upload:
-1. Commit
-2. Wait Netlify deploy
-3. Open app
-4. Press Connect Google
-5. Press Continue on Google
-6. Press Test Functions
+1. Commit changes
+2. Wait for Netlify deploy
+3. Open Aura
+4. Press Load Real Briefing
+
+This fixes:
+Missing access token
+by checking both event.headers.cookie and event.headers.Cookie.
