@@ -1,0 +1,1 @@
+exports.handler=async function(){return{statusCode:200,headers:{'Content-Type':'application/json'},body:JSON.stringify({ok:true,hasClientId:!!process.env.GOOGLE_CLIENT_ID,hasClientSecret:!!process.env.GOOGLE_CLIENT_SECRET,redirectUri:process.env.GOOGLE_REDIRECT_URI||null})}};
