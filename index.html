@@ -6,33 +6,31 @@
   <meta name="theme-color" content="#030814"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title>AURA OS V30</title>
+  <title>AURA OS V31</title>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="stylesheet" href="/style.css"/>
 </head>
 <body>
   <div class="aurora"></div>
+
   <div class="app">
     <header class="top">
       <div>
         <div class="brand">AURA<span>OS</span></div>
         <div class="subtitle">Sofia Operating System</div>
       </div>
+      <button class="round" id="editToggle">✦<small>Edit</small></button>
       <button class="round" id="notifyBtn">🔔<em id="notifyCount">0</em></button>
       <button class="avatar">M</button>
     </header>
 
     <main class="stage">
       <section id="home" class="screen active">
-        <div class="sofia-stage">
+        <div class="sofia-stage" id="orbitZone">
           <div class="orbit orbit-a"></div>
           <div class="orbit orbit-b"></div>
-          <button class="orb-icon i-mail" data-screen="inbox"><span>✉️</span><small id="orbitMail">0</small></button>
-          <button class="orb-icon i-cal" data-screen="calendar"><span>📅</span><small id="orbitCal">0</small></button>
-          <button class="orb-icon i-wa" data-screen="social"><span>💬</span></button>
-          <button class="orb-icon i-file" data-screen="files"><span>📁</span></button>
-          <button class="orb-icon i-media" data-screen="media"><span>🎵</span></button>
-          <button class="orb-icon i-system" data-screen="system"><span>⚙️</span></button>
+
+          <div id="orbitApps"></div>
 
           <button class="sofia-core" id="briefBtn">
             <span>SOFIA</span>
@@ -43,7 +41,7 @@
         <div class="sofia-card">
           <div class="micro-label"><i></i> Live personal OS</div>
           <h1 id="mainLine">Good afternoon, Moshe.</h1>
-          <p id="mainText">I’ll show only what needs attention. Tap Sofia to build today’s briefing.</p>
+          <p id="mainText">Long press an orbit icon to rearrange it. Ask Sofia anything at the bottom.</p>
 
           <div class="command-strip">
             <button class="primary" id="talkBtn">🎙️ Talk</button>
@@ -65,6 +63,16 @@
           </div>
           <div id="sofiaFeed" class="sofia-feed">
             <div class="feed-line muted">No briefing yet. Sofia is waiting.</div>
+          </div>
+        </section>
+
+        <section class="panel minimal">
+          <div class="panel-head">
+            <h2>Action Center</h2>
+            <button id="clearActionsBtn">Clear</button>
+          </div>
+          <div id="actionCenter" class="cards">
+            <div class="muted">Actions will appear here after Sofia briefing.</div>
           </div>
         </section>
       </section>
@@ -110,10 +118,10 @@
       <section id="social" class="screen">
         <div class="screen-head">
           <button class="back" data-screen="home">←</button>
-          <div><h2>Social Planet</h2><span>Ready for connectors.</span></div>
+          <div><h2>Social Planet</h2><span>WhatsApp opens directly; Meta API can be connected later.</span></div>
         </div>
         <div class="planet-grid">
-          <div>💬<b>WhatsApp</b><span>Prepared</span></div>
+          <button class="planet-btn" id="openWhatsapp">💬<b>WhatsApp</b><span>Open WhatsApp</span></button>
           <div>📘<b>Facebook</b><span>Prepared</span></div>
           <div>📸<b>Instagram</b><span>Prepared</span></div>
           <div>💼<b>LinkedIn</b><span>Prepared</span></div>
@@ -140,8 +148,15 @@
         </div>
         <div id="systemList" class="system-list"></div>
         <button class="wide" id="refreshBtn">Refresh system</button>
+        <button class="wide danger" id="resetLayoutBtn">Reset orbit layout</button>
       </section>
     </main>
+
+    <div class="ask-bar">
+      <button id="voiceBtn">🎙️</button>
+      <input id="askInput" placeholder="Ask Sofia… e.g. what is important today?"/>
+      <button id="askSend">Ask</button>
+    </div>
 
     <div class="voice-bar" id="voiceBar">
       <div class="mini-orb"></div>
@@ -163,6 +178,13 @@
     <div class="drawer">
       <div class="drawer-head"><b>Sofia Alerts</b><button id="closeNotify">×</button></div>
       <div id="alertList" class="cards"><div class="muted">No alerts yet.</div></div>
+    </div>
+  </div>
+
+  <div class="modal" id="detailModal">
+    <div class="modal-card">
+      <div class="drawer-head"><b id="modalTitle">Details</b><button id="closeModal">×</button></div>
+      <div id="modalBody"></div>
     </div>
   </div>
 

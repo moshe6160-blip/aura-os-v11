@@ -1,6 +1,6 @@
 {
-  "name": "aura-os-v30-sofia-os",
-  "version": "30.0.0",
+  "name": "aura-os-v31-edit-chat-actions",
+  "version": "31.0.0",
   "private": true,
   "scripts": {
     "build": "node build.js"
