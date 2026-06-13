@@ -1,1 +1,9 @@
-{"name":"AURA OS","short_name":"AURA","start_url":"/","display":"standalone","background_color":"#070707","theme_color":"#070707","icons":[]}
+{
+  "name": "AURA OS",
+  "short_name": "AURA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070707",
+  "theme_color": "#070707",
+  "icons": []
+}
