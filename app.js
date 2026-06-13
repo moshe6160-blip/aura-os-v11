@@ -1,12 +1,81 @@
 const $ = (id) => document.getElementById(id);
-function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
-function fmtDate(value){if(!value)return '';const d=new Date(value);if(Number.isNaN(d.getTime()))return value;return d.toLocaleString(undefined,{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
-async function getJson(url){const res=await fetch(url,{credentials:'include',cache:'no-store'});const data=await res.json().catch(()=>({}));return{ok:res.ok,status:res.status,data};}
-function renderStatus(data){$('statusBox').innerHTML=`<div class="row"><b>Functions</b><span>${data.ok?'Working':'Error'}</span></div><div class="row"><b>GOOGLE_CLIENT_ID</b><span>${data.hasClientId?'Found':'Missing'}</span></div><div class="row"><b>GOOGLE_CLIENT_SECRET</b><span>${data.hasClientSecret?'Found':'Missing'}</span></div><div class="row"><b>GOOGLE_REDIRECT_URI</b><span>${esc(data.redirectUri||'Missing')}</span></div><div class="row"><b>Google connected cookie</b><span>${data.googleConnected?'Connected':'Missing / connect again'}</span></div><div class="row"><b>Access token cookie</b><span>${data.hasToken?'Found':'Missing / connect again'}</span></div><div class="row"><b>Version</b><span>${esc(data.version||'unknown')}</span></div>`;$('connectionText').textContent=data.googleConnected?'Google connected.':'Connect Google to start reading Gmail and Calendar signals.';}
-function renderBriefing(data){if(data.error){$('briefingBox').innerHTML=`<div class="error">${esc(data.error)}</div>`;return;}const gmail=data.gmail||[];const calendar=data.calendar||[];const gmailHtml=gmail.map(m=>`<div class="item"><div class="item-title">${esc(m.subject||'(No subject)')}</div><div class="item-meta">${esc(m.from||'')}</div><div class="item-sub">${esc(m.snippet||'')}</div></div>`).join('');const calHtml=calendar.map(e=>`<div class="item"><div class="item-title">${esc(e.summary||'(No title)')}</div><div class="item-meta">${esc(fmtDate(e.start))}${e.location?' · '+esc(e.location):''}</div></div>`).join('');$('briefingBox').innerHTML=`<div class="briefing-section"><h3>Gmail</h3><div class="item-sub">${data.gmailCount||0} recent signals</div>${gmailHtml||`<div class="empty">No Gmail items returned.</div>`}</div><div class="briefing-section"><h3>Calendar</h3><div class="item-sub">${data.calendarCount||0} upcoming signals</div>${calHtml||`<div class="empty">No upcoming calendar items returned.</div>`}</div>`;}
-async function testFunctions(){$('statusBox').innerHTML=`<div class="row"><b>Functions</b><span>Checking...</span></div>`;const r=await getJson('/.netlify/functions/status');renderStatus(r.data);}
-async function loadBriefing(){$('briefingBox').innerHTML=`<div class="empty">Loading real briefing...</div>`;const r=await getJson('/.netlify/functions/google-briefing');renderBriefing(r.data);}
-$('connectBtn').addEventListener('click',()=>{window.location.href='/.netlify/functions/google-auth';});
-$('testBtn').addEventListener('click',testFunctions);
-$('briefingBtn').addEventListener('click',loadBriefing);
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, s => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[s]));
+}
+
+function fmtDate(value) {
+  if (!value) return "";
+  if (typeof value === "object") value = value.dateTime || value.date || "";
+  const d = new Date(value);
+  return isNaN(d) ? esc(value) : d.toLocaleString();
+}
+
+async function getJson(url) {
+  const res = await fetch(url, { credentials: "include", cache: "no-store" });
+  return await res.json();
+}
+
+function renderStatus(data) {
+  $("statusBox").innerHTML = `
+    <div class="row"><b>Functions</b><span>${data.ok ? "Working" : "Error"}</span></div>
+    <div class="row"><b>GOOGLE_CLIENT_ID</b><span>${data.hasClientId ? "Found" : "Missing"}</span></div>
+    <div class="row"><b>GOOGLE_CLIENT_SECRET</b><span>${data.hasClientSecret ? "Found" : "Missing"}</span></div>
+    <div class="row"><b>GOOGLE_REDIRECT_URI</b><span>${esc(data.redirectUri)}</span></div>
+    <div class="row"><b>Google connected cookie</b><span>${data.googleConnected ? "Connected" : "Missing"}</span></div>
+    <div class="row"><b>Access token cookie</b><span>${data.hasToken ? "Found" : "Missing"}</span></div>
+    <div class="row"><b>Version</b><span>${esc(data.version || "unknown")}</span></div>
+  `;
+}
+
+function renderBriefing(data) {
+  if (data.error) {
+    $("briefingBox").innerHTML = `<div class="error">${esc(data.error)}</div>`;
+    return;
+  }
+
+  const gmail = data.gmail || [];
+  const calendar = data.calendar || [];
+
+  $("briefingBox").innerHTML = `
+    <h3>Gmail</h3>
+    <p>${data.gmailCount || gmail.length} recent signals</p>
+    ${gmail.map(m => `
+      <div class="item">
+        <b>${esc(m.subject || m.snippet || "(No subject)")}</b>
+        <span>${esc(m.from || "")}</span>
+        <span>${esc(m.snippet || "")}</span>
+      </div>
+    `).join("")}
+
+    <h3>Calendar</h3>
+    <p>${data.calendarCount || calendar.length} upcoming signals</p>
+    ${calendar.map(e => `
+      <div class="item">
+        <b>${esc(e.summary || "(No title)")}</b>
+        <span>${fmtDate(e.start)}${e.location ? " · " + esc(e.location) : ""}</span>
+      </div>
+    `).join("")}
+  `;
+}
+
+async function testFunctions() {
+  $("statusBox").innerHTML = "Checking...";
+  renderStatus(await getJson("/.netlify/functions/status"));
+}
+
+async function loadBriefing() {
+  $("briefingBox").innerHTML = "Loading...";
+  renderBriefing(await getJson("/.netlify/functions/google-briefing"));
+}
+
+$("connectBtn").addEventListener("click", () => {
+  window.location.href = "/.netlify/functions/google-auth";
+});
+
+$("testBtn").addEventListener("click", testFunctions);
+$("briefingBtn").addEventListener("click", loadBriefing);
+
 testFunctions();
