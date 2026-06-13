@@ -1,8 +1,18 @@
-AURA OS V11 - GitHub Ready
+AURA OS V12 - Full Netlify Ready
 
-Upload ALL files in this ZIP to your GitHub repository root.
+Upload ALL files/folders from this ZIP to GitHub repository root.
 
-Netlify build settings:
+Must include:
+- index.html
+- package.json
+- build.js
+- netlify.toml
+- netlify/functions/status.js
+- netlify/functions/google-auth.js
+- netlify/functions/google-callback.js
+- netlify/functions/google-briefing.js
+
+Netlify settings:
 Build command: npm run build
 Publish directory: dist
 Functions directory: netlify/functions
@@ -12,5 +22,12 @@ GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET
 GOOGLE_REDIRECT_URI
 
-Redirect URI:
-https://nda-68435e.netlify.app/.netlify/functions/google-callback
+For aura-os-v11.netlify.app:
+GOOGLE_REDIRECT_URI=https://aura-os-v11.netlify.app/.netlify/functions/google-callback
+
+Google Cloud OAuth must also have:
+Authorized JavaScript origins:
+https://aura-os-v11.netlify.app
+
+Authorized redirect URIs:
+https://aura-os-v11.netlify.app/.netlify/functions/google-callback
