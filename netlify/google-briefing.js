@@ -13,7 +13,7 @@ async function googleGet(url, token) {
 }
 
 exports.handler = async function (event) {
-  const cookieHeader = event.headers.cookie || event.headers.Cookie || "";
+  conconst cookieHeader = event.headers.cookie || event.headers.Cookie || "";
   const token = getCookie(cookieHeader, "aura_google_token");
 
   if (!token) {
