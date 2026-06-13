@@ -1,1 +1,52 @@
-function getCookie(h,n){if(!h)return null;const f=h.split(';').map(v=>v.trim()).find(v=>v.startsWith(n+'='));return f?decodeURIComponent(f.split('=').slice(1).join('=')):null}async function gf(u,t){const r=await fetch(u,{headers:{Authorization:`Bearer ${t}`}});if(!r.ok)return null;return r.json()}exports.handler=async function(event){const token=getCookie(event.headers.cookie||event.headers.Cookie,'aura_google_token');if(!token)return{statusCode:401,headers:{'Content-Type':'application/json'},body:JSON.stringify({error:'Google is not connected yet. Tap Connect Google first.'})};const list=await gf('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=5&q=newer_than:7d',token);const emails=[];if(list&&list.messages){for(const m of list.messages.slice(0,5)){const msg=await gf(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From`,token);const hs=(msg&&msg.payload&&msg.payload.headers)||[];emails.push({subject:(hs.find(h=>h.name==='Subject')||{}).value||'',from:(hs.find(h=>h.name==='From')||{}).value||''})}}const now=new Date().toISOString();const cal=await gf('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+new URLSearchParams({timeMin:now,maxResults:'5',singleEvents:'true',orderBy:'startTime'}).toString(),token);const events=((cal&&cal.items)||[]).map(ev=>({summary:ev.summary,start:(ev.start&&(ev.start.dateTime||ev.start.date))||''}));return{statusCode:200,headers:{'Content-Type':'application/json'},body:JSON.stringify({emails,events})}};
+function getCookie(header, name) {
+  if (!header) return null;
+  const found = header.split(";").map(v => v.trim()).find(v => v.startsWith(name + "="));
+  return found ? decodeURIComponent(found.split("=").slice(1).join("=")) : null;
+}
+
+async function googleGet(url, token) {
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json().catch(() => ({}));
+  return { ok: res.ok, status: res.status, data };
+}
+
+exports.handler = async function (event) {
+  const cookieHeader = event.headers.cookie || event.headers.Cookie || "";
+  const token = getCookie(cookieHeader, "aura_google_token");
+
+  if (!token) {
+    return {
+      statusCode: 401,
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      body: JSON.stringify({
+        error: "Missing access token. Connect Google again."
+      })
+    };
+  }
+
+  const gmail = await googleGet(
+    "https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=10",
+    token
+  );
+
+  const now = new Date().toISOString();
+  const calendar = await googleGet(
+    "https://www.googleapis.com/calendar/v3/calendars/primary/events?singleEvents=true&orderBy=startTime&maxResults=10&timeMin=" + encodeURIComponent(now),
+    token
+  );
+
+  return {
+    statusCode: 200,
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+    body: JSON.stringify({
+      gmailCount: gmail.ok ? (gmail.data.messages || []).length : 0,
+      calendarCount: calendar.ok ? (calendar.data.items || []).length : 0,
+      gmailStatus: gmail.status,
+      calendarStatus: calendar.status,
+      gmailError: gmail.ok ? null : gmail.data,
+      calendarError: calendar.ok ? null : calendar.data
+    })
+  };
+};
