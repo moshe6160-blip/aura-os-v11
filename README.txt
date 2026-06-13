@@ -1,20 +1,21 @@
-AURA OS V24 PRODUCT UX
+AURA OS V25 LIVE SOFIA UI
 
-Full replacement package.
-
-What changed:
-- New Universe Home with Sofia Core in the center
-- Orbit apps around Sofia: Gmail, Calendar, WhatsApp, Instagram, Spotify, Files
-- Today Command replaces old test cards
-- Communication Planet with tabs: Gmail / Calendar / WhatsApp
-- Social Planet prepared: WhatsApp, Facebook, Instagram, LinkedIn
-- Media Planet prepared: Spotify, YouTube, Netflix, Apple Music
-- AI Planet: Sofia Intelligence
-- System Planet shows connector health only, no technical GOOGLE_CLIENT_ID noise
-- Working Google OAuth preserved
+Full updated system matching the requested visual:
+- More alive colors: blue, purple, green, orange, red
+- Sofia sun in the center
+- Real app icons around Sofia, not ugly text pills
+- Live Gmail / Calendar counters update after briefing
+- Sofia Briefing panel
+- Today Overview
+- Up Next
+- Priority Actions
+- Sofia Insights
+- Cleaner dock
+- System screen only shows connector status
 
 Upload all files to GitHub repository root.
-Keep Netlify env vars:
+Deploy on Netlify.
+Keep env vars:
 GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET
 GOOGLE_REDIRECT_URI

@@ -10,7 +10,7 @@ exports.handler = async function(event) {
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
     body: JSON.stringify({
       ok: true,
-      version: "AURA_OS_V24_PRODUCT_UX",
+      version: "AURA_OS_V25_LIVE_SOFIA_UI",
       hasClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
       redirectUri: process.env.GOOGLE_REDIRECT_URI || null,

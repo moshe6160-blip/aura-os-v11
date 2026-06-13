@@ -1,7 +1,6 @@
 exports.handler = async function(event) {
   const code = event.queryStringParameters && event.queryStringParameters.code;
   if (!code) return { statusCode: 302, headers: { Location: "/?google=error-no-code" }, body: "" };
-
   const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },

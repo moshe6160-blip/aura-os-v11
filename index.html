@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <meta name="theme-color" content="#080808"/>
-  <title>AURA OS V24</title>
+  <meta name="theme-color" content="#07101b"/>
+  <title>AURA OS V25</title>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="stylesheet" href="/style.css"/>
 </head>
@@ -12,130 +12,161 @@
   <div class="app">
     <header class="topbar">
       <div>
-        <div class="brand">AURA OS</div>
-        <div class="subtitle">Universe Home · Sofia Operating Layer</div>
+        <div class="brand">AURA <span>OS</span></div>
+        <div class="subtitle">Universe Home • Sofia Operating Layer</div>
+        <div class="liveLine"><i></i><span id="systemLine">Checking systems...</span></div>
       </div>
-      <button class="avatar" id="profileBtn">M</button>
+      <div class="rightTop">
+        <button class="avatar" id="profileBtn">M</button>
+        <div class="clock"><b id="timeNow">--:--</b><span id="dateNow">Today</span></div>
+        <button class="bell">🔔<em id="alertCount">0</em></button>
+      </div>
     </header>
 
     <main id="home" class="screen active">
-      <section class="core glass">
-        <div class="coreMap">
-          <button class="sat s1" data-screen="communication">Gmail</button>
-          <button class="sat s2" data-screen="communication">Calendar</button>
-          <button class="sat s3" data-screen="social">WhatsApp</button>
-          <button class="sat s4" data-screen="social">Instagram</button>
-          <button class="sat s5" data-screen="media">Spotify</button>
-          <button class="sat s6" data-screen="system">Files</button>
-          <div class="orbit orbit1"></div>
-          <div class="orbit orbit2"></div>
-          <button class="sofiaCore" id="loadBriefingBtn">
-            <span>SOFIA</span>
-            <small>Tap to brief</small>
-          </button>
+      <section class="heroGrid">
+        <div class="universePanel glass">
+          <div class="spaceMap">
+            <div class="stars"></div>
+            <div class="orbit orbit1"></div>
+            <div class="orbit orbit2"></div>
+            <div class="orbit orbit3"></div>
+
+            <button class="appNode nodeGmail" data-screen="communication" data-tab="gmailPanel">
+              <i>📩</i><b>Gmail</b><span id="nodeGmailCount">Waiting</span><em id="nodeGmailBadge">0</em>
+            </button>
+            <button class="appNode nodeCalendar" data-screen="communication" data-tab="calendarPanel">
+              <i>📅</i><b>Calendar</b><span id="nodeCalendarCount">Waiting</span><em id="nodeCalendarBadge">0</em>
+            </button>
+            <button class="appNode nodeWhatsApp" data-screen="social">
+              <i>🟢</i><b>WhatsApp</b><span>Prepared</span><em>—</em>
+            </button>
+            <button class="appNode nodeInstagram" data-screen="social">
+              <i>📸</i><b>Instagram</b><span>Prepared</span><em>—</em>
+            </button>
+            <button class="appNode nodeSpotify" data-screen="media">
+              <i>🎵</i><b>Spotify</b><span>Shell</span>
+            </button>
+            <button class="appNode nodeFiles" data-screen="system">
+              <i>📁</i><b>Files</b><span>Shell</span>
+            </button>
+
+            <button class="sofiaSun" id="loadBriefingBtn">
+              <span>SOFIA</span>
+              <small>Tap to brief</small>
+            </button>
+          </div>
         </div>
-        <h1 id="heroTitle">Sofia needs real data.</h1>
-        <p id="heroText">Google connected. Load the live briefing and Sofia will decide what matters now.</p>
-        <div class="heroActions">
-          <button class="primary" id="connectGoogleBtn">Connect Google</button>
-          <button id="loadBriefingBtn2">Load Briefing</button>
-          <button class="ghost" id="testFunctionsBtn">System Test</button>
+
+        <aside class="briefPanel glass">
+          <div class="panelHead">
+            <b>SOFIA BRIEFING</b>
+            <span id="briefStatus">Waiting</span>
+          </div>
+          <h1 id="heroTitle">Good afternoon,<br/>Moshe 👋</h1>
+          <p id="heroText">Connect your live universe and Sofia will decide what matters now.</p>
+
+          <div class="briefRows" id="briefRows">
+            <div class="briefRow"><i>📩</i><span><b>Gmail</b><small>Not loaded yet</small></span></div>
+            <div class="briefRow"><i>📅</i><span><b>Calendar</b><small>Not loaded yet</small></span></div>
+            <div class="briefRow"><i>✅</i><span><b>Actions</b><small>Waiting for briefing</small></span></div>
+          </div>
+
+          <div class="heroActions">
+            <button class="primary" id="connectGoogleBtn">Connect Google</button>
+            <button id="loadBriefingBtn2">Open Full Briefing</button>
+            <button class="ghost" id="testFunctionsBtn">System Test</button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="dashboardGrid">
+        <div class="glass overview">
+          <div class="sectionHead">
+            <h2>Today Overview</h2>
+            <span class="badge" id="versionBadge">V25</span>
+          </div>
+          <div class="metricGrid" id="metricGrid">
+            <div class="metric"><i>📩</i><b>0</b><span>Important Emails</span></div>
+            <div class="metric"><i>📅</i><b>0</b><span>Meetings Today</span></div>
+            <div class="metric"><i>🟢</i><b>—</b><span>WhatsApp</span></div>
+            <div class="metric"><i>✅</i><b>0</b><span>Actions</span></div>
+          </div>
+        </div>
+
+        <div class="glass upnext">
+          <div class="sectionHead"><h2>Up Next</h2></div>
+          <div id="upNextList" class="feed"><div class="empty">No upcoming items loaded.</div></div>
         </div>
       </section>
 
-      <section class="glass">
-        <div class="sectionHead">
-          <h2>Today Command</h2>
-          <span id="liveBadge" class="badge">Waiting</span>
+      <section class="dashboardGrid">
+        <div class="glass">
+          <div class="sectionHead"><h2>Priority Actions</h2></div>
+          <div id="priorityActions" class="feed"><div class="empty">Load briefing to generate actions.</div></div>
         </div>
-        <div class="commandGrid" id="commandGrid">
-          <div class="commandCard"><b>Priority</b><span>Not loaded</span></div>
-          <div class="commandCard"><b>Messages</b><span>Not loaded</span></div>
-          <div class="commandCard"><b>Schedule</b><span>Not loaded</span></div>
-          <div class="commandCard"><b>Next Action</b><span>Not loaded</span></div>
-        </div>
-      </section>
 
-      <section class="glass">
-        <div class="sectionHead"><h2>Universe Apps</h2><span class="badge">V24</span></div>
-        <div class="appGrid" id="appGrid"></div>
-      </section>
-
-      <section class="glass">
-        <h2>Sofia Feed</h2>
-        <div id="sofiaFeed" class="feed">
-          <div class="empty">Load briefing to generate Sofia feed.</div>
+        <div class="glass">
+          <div class="sectionHead"><h2>Sofia Insights</h2></div>
+          <div id="sofiaInsights" class="feed">
+            <div class="insight"><i>🧠</i><span><b>Focus Time</b><small>Load live data to calculate.</small></span></div>
+          </div>
         </div>
       </section>
     </main>
 
     <main id="communication" class="screen">
       <section class="glass">
-        <div class="sectionHead">
-          <h2>Communication</h2>
-          <span class="badge ok">Google live</span>
-        </div>
+        <div class="sectionHead"><h2>Communication</h2><span class="badge ok">Gmail + Calendar Live</span></div>
         <div class="tabs">
           <button class="tab active" data-tab="gmailPanel">Gmail</button>
           <button class="tab" data-tab="calendarPanel">Calendar</button>
           <button class="tab" data-tab="whatsappPanel">WhatsApp</button>
         </div>
       </section>
-
-      <section id="gmailPanel" class="panel active glass">
-        <h2>Gmail</h2>
-        <div id="gmailList" class="feed"><div class="empty">No Gmail data loaded yet.</div></div>
-      </section>
-
-      <section id="calendarPanel" class="panel glass">
-        <h2>Calendar</h2>
-        <div id="calendarList" class="feed"><div class="empty">No Calendar data loaded yet.</div></div>
-      </section>
-
-      <section id="whatsappPanel" class="panel glass">
-        <h2>WhatsApp</h2>
-        <div class="placeholderCard">Prepared for official WhatsApp connector.</div>
-      </section>
+      <section id="gmailPanel" class="panel active glass"><h2>Gmail</h2><div id="gmailList" class="feed"><div class="empty">No Gmail data loaded yet.</div></div></section>
+      <section id="calendarPanel" class="panel glass"><h2>Calendar</h2><div id="calendarList" class="feed"><div class="empty">No Calendar data loaded yet.</div></div></section>
+      <section id="whatsappPanel" class="panel glass"><h2>WhatsApp</h2><div class="placeholder">Prepared for official WhatsApp connector.</div></section>
     </main>
 
     <main id="social" class="screen">
       <section class="glass">
-        <h2>Social</h2>
+        <div class="sectionHead"><h2>Social Planet</h2><span class="badge">Prepared</span></div>
         <div class="appGrid">
-          <div class="appTile"><i>🟢</i><b>WhatsApp</b><span>Prepared</span></div>
-          <div class="appTile"><i>📘</i><b>Facebook</b><span>Prepared</span></div>
-          <div class="appTile"><i>📸</i><b>Instagram</b><span>Prepared</span></div>
-          <div class="appTile"><i>💼</i><b>LinkedIn</b><span>Prepared</span></div>
+          <div class="appTile"><i>🟢</i><b>WhatsApp</b><span>Messages connector ready</span></div>
+          <div class="appTile"><i>📘</i><b>Facebook</b><span>Notifications connector ready</span></div>
+          <div class="appTile"><i>📸</i><b>Instagram</b><span>DMs and comments ready</span></div>
+          <div class="appTile"><i>💼</i><b>LinkedIn</b><span>Business signals ready</span></div>
         </div>
       </section>
     </main>
 
     <main id="media" class="screen">
       <section class="glass">
-        <h2>Media</h2>
+        <div class="sectionHead"><h2>Media Planet</h2><span class="badge">Shell</span></div>
         <div class="appGrid">
-          <div class="appTile"><i>🎵</i><b>Spotify</b><span>Shell</span></div>
-          <div class="appTile"><i>▶️</i><b>YouTube</b><span>Shell</span></div>
-          <div class="appTile"><i>🎬</i><b>Netflix</b><span>Shell</span></div>
-          <div class="appTile"><i>🎧</i><b>Apple Music</b><span>Shell</span></div>
+          <div class="appTile"><i>🎵</i><b>Spotify</b><span>Mood and playback</span></div>
+          <div class="appTile"><i>▶️</i><b>YouTube</b><span>Watch and learning</span></div>
+          <div class="appTile"><i>🎬</i><b>Netflix</b><span>Entertainment layer</span></div>
+          <div class="appTile"><i>🎧</i><b>Apple Music</b><span>Audio layer</span></div>
         </div>
       </section>
     </main>
 
     <main id="ai" class="screen">
       <section class="glass">
-        <h2>Sofia Intelligence</h2>
+        <div class="sectionHead"><h2>Sofia Intelligence</h2><span class="badge">AI Layer</span></div>
         <div id="aiInsights" class="feed">
-          <div class="insight"><b>Today Analysis</b><span>Load briefing to calculate.</span></div>
-          <div class="insight"><b>Business</b><span>Ready for connectors.</span></div>
-          <div class="insight"><b>Personal</b><span>Calendar and Gmail live.</span></div>
+          <div class="insight"><i>🧠</i><span><b>Today Analysis</b><small>Load briefing to calculate.</small></span></div>
+          <div class="insight"><i>📊</i><span><b>Productivity</b><small>Waiting for live data.</small></span></div>
+          <div class="insight"><i>💡</i><span><b>Suggestion</b><small>Sofia will suggest next actions.</small></span></div>
         </div>
       </section>
     </main>
 
     <main id="system" class="screen">
       <section class="glass">
-        <div class="sectionHead"><h2>System</h2><button id="refreshStatusBtn">Refresh</button></div>
+        <div class="sectionHead"><h2>System Connectors</h2><button id="refreshStatusBtn">Refresh</button></div>
         <div id="systemConnectors" class="systemGrid"></div>
       </section>
     </main>
@@ -143,8 +174,8 @@
     <nav class="dock">
       <button data-screen="home" class="active">🏠<small>Home</small></button>
       <button data-screen="communication">💬<small>Comms</small></button>
-      <button data-screen="social">🌐<small>Social</small></button>
-      <button data-screen="media">🎬<small>Media</small></button>
+      <button data-screen="social">👥<small>Social</small></button>
+      <button data-screen="media">▶️<small>Media</small></button>
       <button data-screen="ai">✨<small>AI</small></button>
       <button data-screen="system">⚙️<small>System</small></button>
     </nav>
