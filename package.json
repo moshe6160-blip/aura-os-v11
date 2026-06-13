@@ -1,6 +1,6 @@
 {
-  "name": "aura-os-v32-real-sofia-chat",
-  "version": "32.0.0",
+  "name": "aura-os-v33-sofia-conversation-os",
+  "version": "33.0.0",
   "private": true,
   "scripts": {
     "build": "node build.js"

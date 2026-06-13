@@ -5,18 +5,5 @@ function getCookie(header, name) {
 }
 exports.handler = async function(event) {
   const cookieHeader = event.headers.cookie || event.headers.Cookie || "";
-  return {
-    statusCode: 200,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-    body: JSON.stringify({
-      ok: true,
-      version: "AURA_OS_V32_REAL_SOFIA_CHAT",
-      hasClientId: !!process.env.GOOGLE_CLIENT_ID,
-      hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
-      redirectUri: process.env.GOOGLE_REDIRECT_URI || null,
-      hasOpenAI: !!process.env.OPENAI_API_KEY,
-      googleConnected: getCookie(cookieHeader, "google_connected") === "true",
-      hasToken: !!getCookie(cookieHeader, "aura_google_token")
-    })
-  };
+  return { statusCode: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify({ ok: true, version: "AURA_OS_V33_SOFIA_CONVERSATION_OS", hasClientId: !!process.env.GOOGLE_CLIENT_ID, hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET, redirectUri: process.env.GOOGLE_REDIRECT_URI || null, hasOpenAI: !!process.env.OPENAI_API_KEY, googleConnected: getCookie(cookieHeader, "google_connected") === "true", hasToken: !!getCookie(cookieHeader, "aura_google_token") }) };
 };
