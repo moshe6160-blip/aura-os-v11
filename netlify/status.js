@@ -21,7 +21,7 @@ exports.handler = async function (event) {
     },
     body: JSON.stringify({
       ok: true,
-      version: "AURA_OS_V14_COOKIE_FIX",
+      version: "AURA_OS_V19_FULL_REPLACE_FINAL",
       hasClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
       redirectUri: process.env.GOOGLE_REDIRECT_URI || null,
