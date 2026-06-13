@@ -13,21 +13,14 @@ exports.handler = async function(event) {
       grant_type: "authorization_code"
     }).toString()
   });
-
   const token = await tokenRes.json();
-
-  if (!tokenRes.ok || !token.access_token) {
-    return { statusCode: 500, headers: { "Content-Type": "application/json" }, body: JSON.stringify(token) };
-  }
-
+  if (!tokenRes.ok || !token.access_token) return { statusCode: 500, headers: { "Content-Type": "application/json" }, body: JSON.stringify(token) };
   return {
     statusCode: 302,
-    multiValueHeaders: {
-      "Set-Cookie": [
-        "google_connected=true; Path=/; Secure; SameSite=Lax; Max-Age=2592000",
-        `aura_google_token=${encodeURIComponent(token.access_token)}; Path=/; Secure; SameSite=Lax; Max-Age=3500`
-      ]
-    },
+    multiValueHeaders: { "Set-Cookie": [
+      "google_connected=true; Path=/; Secure; SameSite=Lax; Max-Age=2592000",
+      `aura_google_token=${encodeURIComponent(token.access_token)}; Path=/; Secure; SameSite=Lax; Max-Age=3500`
+    ]},
     headers: { Location: "/?google=connected" },
     body: ""
   };

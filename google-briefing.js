@@ -3,40 +3,26 @@ function getCookie(header, name) {
   const found = header.split(";").map(v => v.trim()).find(v => v.startsWith(name + "="));
   return found ? decodeURIComponent(found.split("=").slice(1).join("=")) : null;
 }
-
 async function googleGet(url, token) {
   const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   const data = await res.json().catch(() => ({}));
   return { ok: res.ok, status: res.status, data };
 }
-
 function headerValue(headers, name) {
   const found = (headers || []).find(h => String(h.name || "").toLowerCase() === name.toLowerCase());
   return found ? found.value : "";
 }
-
 function classifyEmail(email) {
   const text = `${email.subject || ""} ${email.from || ""} ${email.snippet || ""}`.toLowerCase();
-
-  if (text.includes("invoice") || text.includes("payment") || text.includes("billing") || text.includes("receipt") || text.includes("statement")) {
-    return { priority: "High", type: "Billing", action: "Review billing email" };
-  }
-  if (text.includes("urgent") || text.includes("important") || text.includes("approval") || text.includes("approve") || text.includes("scanner")) {
-    return { priority: "High", type: "Action", action: "Review and respond" };
-  }
-  if (text.includes("meeting") || text.includes("schedule") || text.includes("calendar")) {
-    return { priority: "Medium", type: "Meeting", action: "Check meeting context" };
-  }
+  if (text.includes("invoice") || text.includes("payment") || text.includes("billing") || text.includes("receipt") || text.includes("statement")) return { priority: "High", type: "Billing", action: "Review billing email" };
+  if (text.includes("urgent") || text.includes("important") || text.includes("approval") || text.includes("approve") || text.includes("scanner")) return { priority: "High", type: "Action", action: "Review and respond" };
+  if (text.includes("meeting") || text.includes("schedule") || text.includes("calendar")) return { priority: "Medium", type: "Meeting", action: "Check meeting context" };
   return { priority: "Normal", type: "Update", action: "Review later" };
 }
-
 async function getGmailDetails(token, messages) {
   const emails = [];
   for (const msg of (messages || []).slice(0, 10)) {
-    const detail = await googleGet(
-      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`,
-      token
-    );
+    const detail = await googleGet(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`, token);
     if (!detail.ok) continue;
     const headers = detail.data.payload?.headers || [];
     const subject = headerValue(headers, "Subject") || "(No subject)";
@@ -44,103 +30,32 @@ async function getGmailDetails(token, messages) {
     const date = headerValue(headers, "Date") || "";
     const snippet = detail.data.snippet || "";
     const classification = classifyEmail({ subject, from, snippet });
-    emails.push({
-      id: detail.data.id,
-      subject,
-      from,
-      date,
-      snippet,
-      priority: classification.priority,
-      type: classification.type,
-      suggestedAction: classification.action
-    });
+    emails.push({ id: detail.data.id, subject, from, date, snippet, priority: classification.priority, type: classification.type, suggestedAction: classification.action });
   }
   return emails;
 }
-
 function buildSofiaSummary(emails, events) {
   const highPriorityEmails = emails.filter(e => e.priority === "High");
   const billingEmails = emails.filter(e => e.type === "Billing");
   const today = new Date().toISOString().slice(0, 10);
   const todayEvents = events.filter(e => String(e.start || "").startsWith(today));
   const nextEvent = events[0] || null;
-
   const recommendedActions = [];
   if (billingEmails.length) recommendedActions.push("Review billing / invoice emails");
   if (highPriorityEmails.length) recommendedActions.push("Check high priority Gmail items");
   if (nextEvent) recommendedActions.push(`Prepare for ${nextEvent.summary}`);
   if (!recommendedActions.length) recommendedActions.push("No urgent action detected right now");
-
-  return {
-    title: "Sofia Today",
-    message: `You have ${emails.length} Gmail signals and ${events.length} upcoming calendar signals.`,
-    gmail: {
-      total: emails.length,
-      highPriority: highPriorityEmails.length,
-      billing: billingEmails.length,
-      latestSender: emails[0]?.from || ""
-    },
-    calendar: {
-      total: events.length,
-      today: todayEvents.length,
-      nextEvent
-    },
-    recommendedActions
-  };
+  return { title: "Sofia Today", message: `You have ${emails.length} Gmail signals and ${events.length} upcoming calendar signals.`, gmail: { total: emails.length, highPriority: highPriorityEmails.length, billing: billingEmails.length, latestSender: emails[0]?.from || "" }, calendar: { total: events.length, today: todayEvents.length, nextEvent }, recommendedActions };
 }
-
 exports.handler = async function(event) {
   const cookieHeader = event.headers.cookie || event.headers.Cookie || "";
   const token = getCookie(cookieHeader, "aura_google_token");
-
-  if (!token) {
-    return {
-      statusCode: 401,
-      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-      body: JSON.stringify({ error: "Google is not connected yet. Tap Connect Google first." })
-    };
-  }
-
-  const gmailList = await googleGet(
-    "https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=10&q=newer_than:14d",
-    token
-  );
-
+  if (!token) return { statusCode: 401, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify({ error: "Google is not connected yet. Tap Connect Google first." }) };
+  const gmailList = await googleGet("https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=10&q=newer_than:14d", token);
   const now = new Date().toISOString();
-  const calendarResult = await googleGet(
-    "https://www.googleapis.com/calendar/v3/calendars/primary/events?" +
-      new URLSearchParams({ timeMin: now, maxResults: "10", singleEvents: "true", orderBy: "startTime" }).toString(),
-    token
-  );
-
+  const calendarResult = await googleGet("https://www.googleapis.com/calendar/v3/calendars/primary/events?" + new URLSearchParams({ timeMin: now, maxResults: "10", singleEvents: "true", orderBy: "startTime" }).toString(), token);
   const emails = gmailList.ok ? await getGmailDetails(token, gmailList.data.messages || []) : [];
-  const events = calendarResult.ok ? (calendarResult.data.items || []).map(ev => ({
-    id: ev.id,
-    summary: ev.summary || "(No title)",
-    start: (ev.start && (ev.start.dateTime || ev.start.date)) || "",
-    end: (ev.end && (ev.end.dateTime || ev.end.date)) || "",
-    location: ev.location || "",
-    description: ev.description || ""
-  })) : [];
-
+  const events = calendarResult.ok ? (calendarResult.data.items || []).map(ev => ({ id: ev.id, summary: ev.summary || "(No title)", start: (ev.start && (ev.start.dateTime || ev.start.date)) || "", end: (ev.end && (ev.end.dateTime || ev.end.date)) || "", location: ev.location || "", description: ev.description || "" })) : [];
   const sofia = buildSofiaSummary(emails, events);
-
-  return {
-    statusCode: 200,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-    body: JSON.stringify({
-      version: "AURA_OS_V23_FULL_SYSTEM",
-      sofia,
-      gmailCount: emails.length,
-      calendarCount: events.length,
-      emails,
-      events,
-      gmail: emails,
-      calendar: events,
-      gmailStatus: gmailList.status,
-      calendarStatus: calendarResult.status,
-      gmailError: gmailList.ok ? null : gmailList.data,
-      calendarError: calendarResult.ok ? null : calendarResult.data
-    })
-  };
+  return { statusCode: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify({ version: "AURA_OS_V24_PRODUCT_UX", sofia, gmailCount: emails.length, calendarCount: events.length, emails, events, gmail: emails, calendar: events, gmailStatus: gmailList.status, calendarStatus: calendarResult.status, gmailError: gmailList.ok ? null : gmailList.data, calendarError: calendarResult.ok ? null : calendarResult.data }) };
 };

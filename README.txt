@@ -1,33 +1,20 @@
-AURA OS V23 FULL SYSTEM
+AURA OS V24 PRODUCT UX
 
-Upload ALL contents of this ZIP to GitHub repository root and replace existing files.
+Full replacement package.
 
-This is not a small patch.
-It includes the full organized AURA OS:
-- Universe Home
-- Communication Planet
-- Social Planet placeholders: WhatsApp, Facebook, Instagram
-- Media Planet
-- Sofia Brain
-- System Planet
-- Working Google OAuth
-- Gmail real data with subject/from/date/snippet
-- Calendar real data
-- Sofia smart summary and recommended actions
+What changed:
+- New Universe Home with Sofia Core in the center
+- Orbit apps around Sofia: Gmail, Calendar, WhatsApp, Instagram, Spotify, Files
+- Today Command replaces old test cards
+- Communication Planet with tabs: Gmail / Calendar / WhatsApp
+- Social Planet prepared: WhatsApp, Facebook, Instagram, LinkedIn
+- Media Planet prepared: Spotify, YouTube, Netflix, Apple Music
+- AI Planet: Sofia Intelligence
+- System Planet shows connector health only, no technical GOOGLE_CLIENT_ID noise
+- Working Google OAuth preserved
 
-Important structure:
-netlify/functions/status.js
-netlify/functions/google-auth.js
-netlify/functions/google-callback.js
-netlify/functions/google-briefing.js
-
-Netlify env vars remain:
+Upload all files to GitHub repository root.
+Keep Netlify env vars:
 GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET
 GOOGLE_REDIRECT_URI
-
-After deploy, check:
-/.netlify/functions/status
-
-It must show:
-AURA_OS_V23_FULL_SYSTEM
