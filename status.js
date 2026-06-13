@@ -4,14 +4,14 @@ function getCookie(header, name) {
   return found ? decodeURIComponent(found.split("=").slice(1).join("=")) : null;
 }
 
-exports.handler = async function (event) {
+exports.handler = async function(event) {
   const cookieHeader = event.headers.cookie || event.headers.Cookie || "";
   return {
     statusCode: 200,
-    headers: { "Content-Type":"application/json", "Cache-Control":"no-store" },
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
     body: JSON.stringify({
       ok: true,
-      version: "AURA_OS_V19_FULL_REPLACE_FINAL",
+      version: "AURA_OS_V20_UNIVERSE_GOOGLE_MERGED",
       hasClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
       redirectUri: process.env.GOOGLE_REDIRECT_URI || null,

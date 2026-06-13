@@ -1,4 +1,7 @@
 {
+  "name": "aura-os-v20-universe-google-merged",
+  "version": "20.0.0",
+  "private": true,
   "scripts": {
     "build": "node build.js"
   },

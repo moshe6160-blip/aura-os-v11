@@ -16,34 +16,43 @@ function headerValue(headers, name) {
 }
 
 async function getGmailDetails(token, messages) {
-  const items = [];
+  const emails = [];
+
   for (const msg of (messages || []).slice(0, 10)) {
     const detail = await googleGet(
       `https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`,
       token
     );
+
     if (!detail.ok) continue;
+
     const headers = detail.data.payload?.headers || [];
-    items.push({
+    const subject = headerValue(headers, "Subject") || "(No subject)";
+    const from = headerValue(headers, "From") || "";
+    const date = headerValue(headers, "Date") || "";
+    const snippet = detail.data.snippet || "";
+
+    emails.push({
       id: detail.data.id,
-      subject: headerValue(headers, "Subject") || "(No subject)",
-      from: headerValue(headers, "From") || "",
-      date: headerValue(headers, "Date") || "",
-      snippet: detail.data.snippet || ""
+      subject,
+      from,
+      date,
+      snippet
     });
   }
-  return items;
+
+  return emails;
 }
 
-exports.handler = async function (event) {
+exports.handler = async function(event) {
   const cookieHeader = event.headers.cookie || event.headers.Cookie || "";
   const token = getCookie(cookieHeader, "aura_google_token");
 
   if (!token) {
     return {
       statusCode: 401,
-      headers: { "Content-Type":"application/json", "Cache-Control":"no-store" },
-      body: JSON.stringify({ error: "Missing access token. Connect Google again." })
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      body: JSON.stringify({ error: "Google is not connected yet. Tap Connect Google first." })
     };
   }
 
@@ -54,28 +63,38 @@ exports.handler = async function (event) {
 
   const now = new Date().toISOString();
   const calendarResult = await googleGet(
-    "https://www.googleapis.com/calendar/v3/calendars/primary/events?singleEvents=true&orderBy=startTime&maxResults=10&timeMin=" + encodeURIComponent(now),
+    "https://www.googleapis.com/calendar/v3/calendars/primary/events?" +
+      new URLSearchParams({
+        timeMin: now,
+        maxResults: "10",
+        singleEvents: "true",
+        orderBy: "startTime"
+      }).toString(),
     token
   );
 
-  const gmailItems = gmailList.ok ? await getGmailDetails(token, gmailList.data.messages || []) : [];
-  const calendarItems = calendarResult.ok ? (calendarResult.data.items || []).map(e => ({
-    id: e.id,
-    summary: e.summary || "(No title)",
-    start: e.start?.dateTime || e.start?.date || "",
-    end: e.end?.dateTime || e.end?.date || "",
-    location: e.location || "",
-    description: e.description || ""
+  const emails = gmailList.ok ? await getGmailDetails(token, gmailList.data.messages || []) : [];
+
+  const events = calendarResult.ok ? (calendarResult.data.items || []).map(ev => ({
+    id: ev.id,
+    summary: ev.summary || "(No title)",
+    start: (ev.start && (ev.start.dateTime || ev.start.date)) || "",
+    end: (ev.end && (ev.end.dateTime || ev.end.date)) || "",
+    location: ev.location || "",
+    description: ev.description || ""
   })) : [];
 
   return {
     statusCode: 200,
-    headers: { "Content-Type":"application/json", "Cache-Control":"no-store" },
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
     body: JSON.stringify({
-      gmailCount: gmailItems.length,
-      calendarCount: calendarItems.length,
-      gmail: gmailItems,
-      calendar: calendarItems,
+      version: "AURA_OS_V20_UNIVERSE_GOOGLE_MERGED",
+      gmailCount: emails.length,
+      calendarCount: events.length,
+      emails,
+      events,
+      gmail: emails,
+      calendar: events,
       gmailStatus: gmailList.status,
       calendarStatus: calendarResult.status,
       gmailError: gmailList.ok ? null : gmailList.data,

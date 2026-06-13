@@ -1,35 +1,134 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>AURA OS - Sofia</title>
-  <link rel="manifest" href="/manifest.json"/>
-  <link rel="stylesheet" href="/style.css"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#080808"/>
+<title>AURA OS V20</title>
+<style>
+:root{--bg:#080808;--gold:#c8a56a;--gold2:#e1c178;--text:#f5f5f5;--muted:#aaa;--line:rgba(255,255,255,.12);--panel:rgba(255,255,255,.065);--red:#ff6868;--ok:#5cff9d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:radial-gradient(circle at 50% 3%,rgba(200,165,106,.18),transparent 34%),radial-gradient(circle at 20% 90%,rgba(88,160,255,.08),transparent 30%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif}
+.app{max-width:760px;margin:0 auto;min-height:100vh;padding:calc(env(safe-area-inset-top) + 26px) 18px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.brand{color:var(--gold);font-weight:1000;letter-spacing:4px}.sub{color:var(--muted);margin-top:8px}.profile{width:46px;height:46px;border-radius:50%;border:1px solid rgba(200,165,106,.45);background:rgba(255,255,255,.08);color:var(--gold);font-weight:1000}
+.card{border:1px solid var(--line);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.04));padding:24px;margin-bottom:16px;box-shadow:0 18px 50px rgba(0,0,0,.28);backdrop-filter:blur(18px)}
+.hero{text-align:center;min-height:42vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.orb{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#efd08a,#9b7438);color:#111;font-weight:1000;letter-spacing:3px;box-shadow:0 0 80px rgba(200,165,106,.25);margin-bottom:22px}
+h1{color:var(--gold);font-size:36px;line-height:1.05;margin:0 0 12px}h2{color:var(--gold);margin:0 0 18px;font-size:30px}h3{font-size:25px;margin:22px 0 10px}
+p{color:var(--muted);line-height:1.45}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}button{border:0;border-radius:999px;background:var(--gold);color:#111;font-weight:900;padding:14px 18px;margin-top:8px}.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.planet{border:1px solid var(--line);border-radius:24px;background:var(--panel);padding:18px;min-height:116px}.planet .icon{font-size:28px}.planet b{display:block;margin-top:12px;font-size:18px}.planet small{display:block;color:var(--muted);margin-top:7px;line-height:1.35}
+.item{border-top:1px solid var(--line);padding:14px 0}.item:first-child{border-top:0}.item b{display:block;font-size:18px;line-height:1.25}.item small,.item span{display:block;color:var(--muted);margin-top:6px;line-height:1.35;word-break:break-word}.ok{color:var(--ok)}.bad{color:var(--red)}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:5px 9px;margin:4px 4px 0 0;color:var(--muted);font-size:12px}
+@media(min-width:680px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{min-height:34vh}}
+</style>
 </head>
 <body>
-  <main class="shell">
-    <section class="hero card">
-      <div class="orb">SOFIA</div>
-      <h1>Sofia needs real data.</h1>
-      <p id="connectionText">Connect Google to start reading Gmail and Calendar signals.</p>
-      <div class="actions">
-        <button class="primary" id="connectBtn">Connect Google</button>
-        <button id="briefingBtn">Load Real Briefing</button>
-        <button id="testBtn">Test Functions</button>
-      </div>
-    </section>
+<div class="app">
+<header class="top">
+  <div><div class="brand">AURA OS</div><div class="sub">Universe Home · Sofia Real Connector</div></div>
+  <button class="profile">M</button>
+</header>
 
-    <section class="card">
-      <h2>Real Briefing</h2>
-      <div id="briefingBox" class="briefing"><div class="empty">No real data loaded yet.</div></div>
-    </section>
+<section class="hero card">
+  <div class="orb">SOFIA</div>
+  <h1>Sofia needs real data.</h1>
+  <p id="status">Connect Google to start reading Gmail and Calendar signals.</p>
+  <div class="actions">
+    <button id="connectBtn">Connect Google</button>
+    <button class="ghost" id="refreshBtn">Load Real Briefing</button>
+    <button class="ghost" id="testBtn">Test Functions</button>
+  </div>
+</section>
 
-    <section class="card">
-      <h2>Connector Status</h2>
-      <div id="statusBox" class="status-list"><div class="row"><b>Functions</b><span>Tap Test Functions.</span></div></div>
-    </section>
-  </main>
-  <script src="/app.js"></script>
+<section class="card">
+  <h2>Universe Home</h2>
+  <div class="grid">
+    <div class="planet"><div class="icon">💬</div><b>Communication Planet</b><small>Gmail live, Calendar live, WhatsApp/Facebook/Instagram shells ready.</small><span class="pill">Gmail ✅</span><span class="pill">Calendar ✅</span><span class="pill">WhatsApp next</span></div>
+    <div class="planet"><div class="icon">🎬</div><b>Media Planet</b><small>Spotify, Netflix, YouTube and content surface placeholders.</small><span class="pill">Media shell</span></div>
+    <div class="planet"><div class="icon">🧠</div><b>AI Planet</b><small>Sofia state, summaries, decisions and next-action logic.</small><span class="pill">Sofia</span></div>
+    <div class="planet"><div class="icon">📈</div><b>Revenue Planet</b><small>Revenue OS connector surface for hotel signals and alerts.</small><span class="pill">Revenue OS</span></div>
+    <div class="planet"><div class="icon">⚙️</div><b>System Planet</b><small>Connector health, OAuth, tokens and deployment status.</small><span class="pill">Status</span></div>
+    <div class="planet"><div class="icon">🟡</div><b>POD Control Center</b><small>Aura Pod controls, quick actions, future device state.</small><span class="pill">Control</span></div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Real Briefing</h2>
+  <div id="briefing"><p>No real data loaded yet.</p></div>
+</section>
+
+<section class="card">
+  <h2>Connector Status</h2>
+  <div id="debug"><p>Tap Test Functions.</p></div>
+</section>
+</div>
+
+<script>
+const statusEl=document.getElementById('status'), briefingEl=document.getElementById('briefing'), debugEl=document.getElementById('debug');
+
+document.getElementById('connectBtn').onclick=()=>{location.href='/.netlify/functions/google-auth'};
+document.getElementById('testBtn').onclick=testFunctions;
+document.getElementById('refreshBtn').onclick=loadBriefing;
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}
+function fmtDate(value){
+  if(!value)return '';
+  if(typeof value==='object') value=value.dateTime||value.date||'';
+  const d=new Date(value);
+  if(isNaN(d)) return esc(value);
+  return d.toLocaleString(undefined,{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+async function getJson(url){
+  const r=await fetch(url,{credentials:'include',cache:'no-store'});
+  const d=await r.json().catch(()=>({error:'Bad JSON'}));
+  return {r,d};
+}
+
+async function testFunctions(){
+  debugEl.innerHTML='<p>Testing...</p>';
+  try{
+    const {r,d}=await getJson('/.netlify/functions/status');
+    statusEl.textContent=d.googleConnected?'Google connected.':'Connect Google to start reading Gmail and Calendar signals.';
+    debugEl.innerHTML=`
+      <div class="item"><b>Functions</b><small class="${r.ok?'ok':'bad'}">${r.ok?'Working':'Problem'}</small></div>
+      <div class="item"><b>Version</b><small>${esc(d.version||'unknown')}</small></div>
+      <div class="item"><b>GOOGLE_CLIENT_ID</b><small>${d.hasClientId?'Found':'Missing'}</small></div>
+      <div class="item"><b>GOOGLE_CLIENT_SECRET</b><small>${d.hasClientSecret?'Found':'Missing'}</small></div>
+      <div class="item"><b>GOOGLE_REDIRECT_URI</b><small>${esc(d.redirectUri||'Missing')}</small></div>
+      <div class="item"><b>Google connected cookie</b><small>${d.googleConnected?'Connected':'Missing'}</small></div>
+      <div class="item"><b>Access token cookie</b><small>${d.hasToken?'Found':'Missing'}</small></div>`;
+  }catch(e){debugEl.innerHTML='<p class="bad">Functions not working. Files were not deployed.</p>'}
+}
+
+async function loadBriefing(){
+  briefingEl.innerHTML='<p>Loading real Google signals...</p>';
+  try{
+    const {r,d}=await getJson('/.netlify/functions/google-briefing');
+    if(!r.ok){briefingEl.innerHTML='<p class="bad">'+esc(d.error||'Not connected yet')+'</p>';return}
+    statusEl.textContent='Google connected. Sofia is reading real signals.';
+    const emails=d.emails||d.gmail||[];
+    const events=d.events||d.calendar||[];
+    briefingEl.innerHTML=`
+      <h3>Gmail</h3>
+      <p>${emails.length} recent signals</p>
+      ${emails.length?emails.map(e=>`
+        <div class="item">
+          <b>${esc(e.subject||e.snippet||'No subject')}</b>
+          ${e.from?`<small>From: ${esc(e.from)}</small>`:''}
+          ${e.date?`<small>${esc(e.date)}</small>`:''}
+          ${e.snippet?`<span>${esc(e.snippet)}</span>`:''}
+        </div>`).join(''):'<p>No Gmail items returned.</p>'}
+      <h3>Calendar</h3>
+      <p>${events.length} upcoming signals</p>
+      ${events.length?events.map(ev=>`
+        <div class="item">
+          <b>${esc(ev.summary||'Untitled')}</b>
+          <small>${fmtDate(ev.start)}${ev.location?' · '+esc(ev.location):''}</small>
+        </div>`).join(''):'<p>No upcoming calendar items returned.</p>'}`;
+  }catch(e){briefingEl.innerHTML='<p class="bad">Could not load data. Test Functions first.</p>'}
+}
+
+testFunctions();
+</script>
 </body>
 </html>

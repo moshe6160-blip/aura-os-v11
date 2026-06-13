@@ -1,18 +1,27 @@
-AURA OS V19 FULL REPLACE FINAL
+AURA OS V20 - Universe + Google Real Connector MERGED
 
-Upload ALL CONTENTS of this ZIP to the GitHub repository ROOT.
-Replace existing files.
+This package keeps the working V12/V20 Netlify structure:
+- netlify.toml uses functions = netlify/functions
+- functions are in netlify/functions/
 
-After upload:
-1. Commit to main
-2. Wait for Netlify deploy
-3. Open:
-   https://aura-os-v11.netlify.app/.netlify/functions/status
+Upload ALL contents of this ZIP to GitHub repository root and replace existing files.
 
-It MUST show:
-"version":"AURA_OS_V19_FULL_REPLACE_FINAL"
+After Netlify deploy, test:
+https://aura-os-v11.netlify.app/.netlify/functions/status
 
-If it still shows V14, Netlify did not deploy this package.
+It must show:
+"version":"AURA_OS_V20_UNIVERSE_GOOGLE_MERGED"
 
 Then:
-Connect Google again -> Load Real Briefing.
+1. Open site
+2. Connect Google again
+3. Load Real Briefing
+
+Included:
+- Universe Home shell
+- Communication Planet with Gmail + Calendar real data
+- Facebook / Instagram / WhatsApp placeholders ready for next connectors
+- Revenue Planet placeholder
+- System Planet
+- POD Control Center
+- Working google-briefing.js with Gmail Subject / From / Date / Snippet
